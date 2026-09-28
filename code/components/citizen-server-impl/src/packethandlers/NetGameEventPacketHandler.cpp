@@ -95,6 +95,12 @@ bool NetGameEventPacketHandlerV2::ProcessNetEvent(fx::ServerInstanceBase* instan
 
 		for (const uint16_t player : targetPlayersSpan)
 		{
+			// target IDs come from the client, don't index the processed bitset out of range
+			if (player >= MAX_CLIENTS)
+			{
+				continue;
+			}
+
 			// de-duplicate targetPlayers, preventing the sending of a large number of events to a single client
 			if (processed.test(player))
 			{
