@@ -1472,6 +1472,8 @@ void Initialize(nui::GameInterface* gi)
     }
 
 	static ConVar<std::string> uiUrlVar("ui_url", ConVar_UserPref, "https://nui-game-internal/ui/app/index.html");
+	// the remote debugging port exposes all NUI frames locally, so keep it opt-in
+	static ConVar<bool> nuiRemoteDebuggingVar("nui_remoteDebugging", ConVar_UserPref, false);
 
 	auto deferredInitializer = DeferredInitializer::Create([]()
 	{
@@ -1490,7 +1492,7 @@ void Initialize(nui::GameInterface* gi)
 		CefSettings cSettings;
 
 		cSettings.multi_threaded_message_loop = true;
-		cSettings.remote_debugging_port = 13172;
+		cSettings.remote_debugging_port = nuiRemoteDebuggingVar.GetValue() ? 13172 : 0;
 		cSettings.windowless_rendering_enabled = true;
 		cSettings.log_severity = LOGSEVERITY_DEFAULT;
 		cSettings.background_color = 0;
